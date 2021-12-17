@@ -1,9 +1,10 @@
 #include <stdio.h>
-#include "freertos/FreeRTOS.h"
-#include "freertos/task.h"
+//#include "freertos/FreeRTOS.h"
+//#include "freertos/task.h"
 #include "driver/gpio.h"
 #include "sdkconfig.h"
 #include "driver/ledc.h"
+#include "driver/adc.h"
 
 #define MOS_pin 25
 
@@ -31,17 +32,19 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(ledc_channel_config(&mos_channel));
 
+    adc1_config_channel_atten(ADC1_CHANNEL_7, 3);
     
+    int pot = 0; int prev = 0;
+    int brightness = 0; int on = 0;
     while(1) {
-        for(int i = 0; i < 8192; i++){
-            ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, i));
-            ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
-            vTaskDelay(5 / portTICK_PERIOD_MS);
+        pot = adc1_get_raw(ADC1_CHANNEL_7);
+        if(abs(pot-prev >= 10)){
+            brightness = ((float) pot) / 4095.0f * 8191.0f;
+            if(brightness < 0) brightness = 0;
+            if(brightness > 8191) brightness = 8191;
         }
-        for(int i = 8191; i >= 0; i--){
-            ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, i));
-            ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
-            vTaskDelay(5 / portTICK_PERIOD_MS);
-        }
+        printf("Potentiometer value %i\n", pot);
+        ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, brightness));
+        ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
     }
 }

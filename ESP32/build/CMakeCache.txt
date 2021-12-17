@@ -253,12 +253,6 @@ INSTALL_MBEDTLS_HEADERS:BOOL=ON
 //Explicitly link mbed TLS library to pthread.
 LINK_WITH_PTHREAD:BOOL=OFF
 
-//Value Computed by CMake
-Lamp_BINARY_DIR:STATIC=/home/jojala/IoT_AlarmLamp/ESP32/build
-
-//Value Computed by CMake
-Lamp_SOURCE_DIR:STATIC=/home/jojala/IoT_AlarmLamp/ESP32
-
 //Path to a program.
 PERL_EXECUTABLE:FILEPATH=/usr/bin/perl
 
