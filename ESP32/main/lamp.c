@@ -5,13 +5,14 @@
 #include "sdkconfig.h"
 #include "driver/ledc.h"
 #include "driver/adc.h"
+#include "esp_timer.h"
 
 #define mos_pin 25
 
 //Struct for control points to control the brightness of the lamp during wakeup
 typedef struct {
-    float brightness;
-    float time;
+    float brightness;   //Brightness in range [0, 1]
+    int time;           //Time from start in minutes
 }cpoint;
 
 void app_main(void){
@@ -51,10 +52,19 @@ void app_main(void){
     int bezier = 0; //Whether or not the brightness curve is a bezier curve
     int autom = 0;  //Whether or not the brightness is currently determined automatically
     cpoint control_points[4]; //The brightness curve control points
+
+    //Values for linear interpolation
+    float k = 0;    //The slope of the current piece
+    float b0 = 0;   //The vertical offset of the piece
+    float t0 = 0;   //The horizontal offset of the piece
+    unsigned i = 0; //Current first index
+    float t1 = 0;   //The stop time of the current piece
+
+    float tStart = 0; //Start time
     while(1) {
         //Check the button reading and toggle lamp/override automatic control if high
         if(adc1_get_raw(ADC1_CHANNEL_6) > 2000){
-            if(autom = false) on != on;
+            if(autom == false) on = !on;
             else autom = false;
         }
 
@@ -66,6 +76,25 @@ void app_main(void){
             if(brightness < 0) brightness = 0;
             if(brightness > 8191) brightness = 8191;
             autom = false;
+        }
+
+        //Automatic brightness control for wakeup
+        if(autom){
+            //To avoid overflow errors, remember to reboot at least once every 292 thousand years
+            float t = (float) esp_timer_get_time() / 1000000.0f - tStart;
+            if(0 /*bezier*/){
+                //Only linear interpolation for now
+            }else{
+                if(t >= t1){
+                    i++;
+                    if(i < 3){
+                        t0 = t1;
+                        t1 = 60*control_points[i + 1].time;
+                        b0 = control_points[i].brightness;
+                        k = (control_points[i + 1].brightness - b0)/(t1 - t0);
+                    }else autom = false;
+                }else brightness = b0 + (t - t0)*k;
+            }
         }
 
         //Set the PWM value based on the brightness and whether the lamp is on
