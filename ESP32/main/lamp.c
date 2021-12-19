@@ -8,8 +8,7 @@
 
 #define mos_pin 25
 
-void app_main(void)
-{
+void app_main(void){
     //Initialize LED PWM timer
     ledc_timer_config_t mos_timer = {
         .speed_mode         = LEDC_LOW_SPEED_MODE,
@@ -32,17 +31,21 @@ void app_main(void)
     };
     ESP_ERROR_CHECK(ledc_channel_config(&mos_channel));
 
-    adc1_config_channel_atten(ADC1_CHANNEL_7, 3);
-    adc1_config_channel_atten(ADC1_CHANNEL_6, 3);
+    //Configure ADC
+    adc1_config_channel_atten(ADC1_CHANNEL_7, 3); //Potentiometer
+    adc1_config_channel_atten(ADC1_CHANNEL_6, 3); //Button
     
+    //Current and previous potentiometer reading
     int pot = 0; int prev = 0;
-    int brightness = 0; int on = 0;
+
+    //Current brightness and whether or not the lamp is on
+    int brightness = 0; int on = 0; 
     while(1) {
         if(adc1_get_raw(ADC1_CHANNEL_6) > 2000){
             on != on;
         }
         pot = adc1_get_raw(ADC1_CHANNEL_7);
-        if(abs(pot-prev >= 10)){
+        if(abs(pot-prev) >= 10){
             brightness = ((float) pot) / 4095.0f * 8191.0f;
             if(brightness < 0) brightness = 0;
             if(brightness > 8191) brightness = 8191;
