@@ -8,6 +8,12 @@
 
 #define mos_pin 25
 
+//Struct for control points to control the brightness of the lamp during wakeup
+typedef struct {
+    float brightness;
+    float time;
+}cpoint;
+
 void app_main(void){
     //Initialize LED PWM timer
     ledc_timer_config_t mos_timer = {
@@ -39,17 +45,30 @@ void app_main(void){
     int pot = 0; int prev = 0;
 
     //Current brightness and whether or not the lamp is on
-    int brightness = 0; int on = 0; 
+    int brightness = 0; int on = 0;
+
+    //Values for remote control
+    int bezier = 0; //Whether or not the brightness curve is a bezier curve
+    int autom = 0;  //Whether or not the brightness is currently determined automatically
+    cpoint control_points[4]; //The brightness curve control points
     while(1) {
+        //Check the button reading and toggle lamp/override automatic control if high
         if(adc1_get_raw(ADC1_CHANNEL_6) > 2000){
-            on != on;
+            if(autom = false) on != on;
+            else autom = false;
         }
+
+        //Check the potentiometer value, update brightness and override automatic
+        //control if altered sufficiently
         pot = adc1_get_raw(ADC1_CHANNEL_7);
         if(abs(pot-prev) >= 10){
             brightness = ((float) pot) / 4095.0f * 8191.0f;
             if(brightness < 0) brightness = 0;
             if(brightness > 8191) brightness = 8191;
+            autom = false;
         }
+
+        //Set the PWM value based on the brightness and whether the lamp is on
         if(on){
             ESP_ERROR_CHECK(ledc_set_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0, brightness));
             ESP_ERROR_CHECK(ledc_update_duty(LEDC_LOW_SPEED_MODE, LEDC_CHANNEL_0));
