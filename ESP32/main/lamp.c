@@ -8,6 +8,7 @@
 #include "esp_timer.h"
 
 #define mos_pin 25
+#define button 26
 
 //Struct for control points to control the brightness of the lamp during wakeup
 typedef struct {
@@ -38,12 +39,19 @@ void app_main(void){
     };
     ESP_ERROR_CHECK(ledc_channel_config(&mos_channel));
 
+    //configure button pin
+    gpio_reset_pin(button);
+    gpio_set_direction(button, GPIO_MODE_INPUT);
+    gpio_set_pull_mode(button, GPIO_PULLDOWN_ONLY);
+
     //Configure ADC
-    adc1_config_channel_atten(ADC1_CHANNEL_7, 3); //Potentiometer
-    adc1_config_channel_atten(ADC1_CHANNEL_6, 3); //Button
+    adc1_config_channel_atten(ADC1_CHANNEL_7, 3); //Potentiometer on pin 35
     
     //Current and previous potentiometer reading
     int pot = 0; int prev = 0;
+    
+    //Button values
+    int button_read = 0; uint64_t bstates = 0; unsigned int state = 0;
 
     //Current brightness and whether or not the lamp is on
     float brightness = 0.0f; int on = 0;
@@ -62,10 +70,19 @@ void app_main(void){
 
     float tStart = 0; //Start time
     while(1) {
+        //Take button reading with debouncing
+        if(gpio_get_level(button)){
+            bstates |= 1 << state;
+        }else bstates &= ~(1 << state);
+        state = (state + 1) % 64;
+        
         //Check the button reading and toggle lamp/override automatic control if high
-        if(adc1_get_raw(ADC1_CHANNEL_6) > 2000){
+        if(!button_read && !(~bstates)){
+            button_read = 1;
             if(autom == false) on = !on;
             else autom = false;
+        }else if(button_read && !bstates){
+            button_read = 0;
         }
 
         //Check the potentiometer value, update brightness and override automatic
