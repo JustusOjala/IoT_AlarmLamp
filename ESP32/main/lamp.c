@@ -20,7 +20,7 @@ void onReceive(const uint8_t* MAC, const uint8_t* data, int len){
     if(rdata != NULL) free(rdata);
     rdata = malloc(len);
     memcpy(rdata, data, len);
-    received = 1;
+    received = len;
 }
 
 //Struct for control points to control the brightness of the lamp during wakeup
@@ -115,7 +115,27 @@ void app_main(void){
         }
 
         if(received){
-            
+            switch(data[0]){
+                case 0: //Turn off
+                    on = 0;
+                    break;
+                case 1: //Turn on
+                    on = 1;
+                    brightness = (float) data[1] / 255.0;
+                    break;
+                case 2: //Set to brighten automatically (linear)
+                case 3: //Set to brighten automatically (Bezier - for now interpreted as linear)
+                    on = 1;
+                    autom = 1;
+                    for(uint i = 0; i < min(8, received); i += 2){
+                        control_points[i] = cpoint{(float) rdata[i] / 255.0, rdata[i + 1]};
+                    }
+                    break;
+                default: break;
+            }
+            received = 0;
+            free(rdata);
+            rdata = NULL;
         }
 
         //Automatic brightness control for wakeup
