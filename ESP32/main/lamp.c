@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 //#include "freertos/FreeRTOS.h"
 //#include "freertos/task.h"
 #include "driver/gpio.h"
@@ -6,9 +7,21 @@
 #include "driver/ledc.h"
 #include "driver/adc.h"
 #include "esp_timer.h"
+#include "esp_wifi.h"
+#include "esp_now.h"
 
-#define mos_pin 25
+#define mos_pin 14
 #define button 26
+
+int received = 0;
+uint8_t* rdata = NULL;
+
+void onReceive(const uint8_t* MAC, const uint8_t* data, int len){
+    if(rdata != NULL) free(rdata);
+    rdata = malloc(len);
+    memcpy(rdata, data, len);
+    received = 1;
+}
 
 //Struct for control points to control the brightness of the lamp during wakeup
 typedef struct {
@@ -45,7 +58,13 @@ void app_main(void){
     gpio_set_pull_mode(button, GPIO_PULLDOWN_ONLY);
 
     //Configure ADC
-    adc1_config_channel_atten(ADC1_CHANNEL_7, 3); //Potentiometer on pin 35
+    adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
+
+    //Initialize wi-fi
+    esp_wifi_init(WIFI_INIT_CONFIG_DEFAULT);
+    esp_wifi_set_mode(WIFI_MODE_STA);
+    esp_now_init();
+    esp_now_register_recv_cb(onReceive);
     
     //Current and previous potentiometer reading
     int pot = 0; int prev = 0;
@@ -87,12 +106,16 @@ void app_main(void){
 
         //Check the potentiometer value, update brightness and override automatic
         //control if altered sufficiently
-        pot = adc1_get_raw(ADC1_CHANNEL_7);
+        pot = adc1_get_raw(ADC1_CHANNEL_4);
         if(abs(pot-prev) >= 10){
             brightness = (float) pot / 4095.0f;
             if(brightness < 0.0) brightness = 0.0;
             if(brightness > 1.0) brightness = 1.0;
             autom = false;
+        }
+
+        if(received){
+            
         }
 
         //Automatic brightness control for wakeup
