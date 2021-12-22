@@ -118,10 +118,12 @@ void app_main(void){
             switch(data[0]){
                 case 0: //Turn off
                     on = 0;
+                    autom = 0;
                     break;
                 case 1: //Turn on
                     on = 1;
                     brightness = (float) data[1] / 255.0;
+                    autom = 0;
                     break;
                 case 2: //Set to brighten automatically (linear)
                 case 3: //Set to brighten automatically (Bezier - for now interpreted as linear)
