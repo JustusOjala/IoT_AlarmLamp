@@ -7,27 +7,76 @@
 #include "driver/ledc.h"
 #include "driver/adc.h"
 #include "esp_timer.h"
-#include "esp_wifi.h"
-#include "esp_now.h"
+#include "esp_bt.h"
+#include "esp_spp_api.h"
+#include "esp_bt_device.h"
+#include "esp_bt_main.h"
+#include "esp_gap_bt_api.h"
 
 #define mos_pin 14
 #define button 26
 
+#define SPP_TAG "IOT_LAMP"
+
 int received = 0;
 uint8_t* rdata = NULL;
-
-void onReceive(const uint8_t* MAC, const uint8_t* data, int len){
-    if(rdata != NULL) free(rdata);
-    rdata = malloc(len);
-    memcpy(rdata, data, len);
-    received = len;
-}
 
 //Struct for control points to control the brightness of the lamp during wakeup
 typedef struct {
     float brightness;   //Brightness in range [0, 1]
     int time;           //Time from start in minutes
 }cpoint;
+
+
+//SPP callback function for BT communication
+static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
+{
+    switch (event) {
+    case ESP_SPP_INIT_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_INIT_EVT");
+        esp_spp_start_srv(ESP_SPP_SEC_NONE, ESP_SPP_ROLE_SLAVE, 0, "SPP_SERVER");
+        break;
+    case ESP_SPP_DISCOVERY_COMP_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_DISCOVERY_COMP_EVT");
+        break;
+    case ESP_SPP_OPEN_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_OPEN_EVT");
+        break;
+    case ESP_SPP_CLOSE_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_CLOSE_EVT");
+        break;
+    case ESP_SPP_START_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_START_EVT");
+        esp_bt_dev_set_device_name("ESP_LAMP");
+        esp_bt_gap_set_scan_mode(ESP_BT_CONNECTABLE, ESP_BT_GENERAL_DISCOVERABLE);
+        break;
+    case ESP_SPP_CL_INIT_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_CL_INIT_EVT");
+        break;
+    case ESP_SPP_DATA_IND_EVT:
+        rdata = (uint8_t*) malloc(param->data_ind.len);
+        memcpy(rdata, param->data_ind.data, param->data_ind.len);
+        received = 1;
+        break;
+    case ESP_SPP_CONG_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_CONG_EVT");
+        break;
+    case ESP_SPP_WRITE_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_WRITE_EVT");
+        break;
+    case ESP_SPP_SRV_OPEN_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_SRV_OPEN_EVT");
+        break;
+    case ESP_SPP_SRV_STOP_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_SRV_STOP_EVT");
+        break;
+    case ESP_SPP_UNINIT_EVT:
+        ESP_LOGI(SPP_TAG, "ESP_SPP_UNINIT_EVT");
+        break;
+    default:
+        break;
+    }
+}
 
 void app_main(void){
     //Initialize LED PWM timer
@@ -59,12 +108,6 @@ void app_main(void){
 
     //Configure ADC
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
-
-    //Initialize wi-fi
-    esp_wifi_init(WIFI_INIT_CONFIG_DEFAULT);
-    esp_wifi_set_mode(WIFI_MODE_STA);
-    esp_now_init();
-    esp_now_register_recv_cb(onReceive);
     
     //Current and previous potentiometer reading
     int pot = 0; int prev = 0;
@@ -115,22 +158,23 @@ void app_main(void){
         }
 
         if(received){
-            switch(data[0]){
+            switch(rdata[0]){
                 case 0: //Turn off
                     on = 0;
                     autom = 0;
                     break;
                 case 1: //Turn on
                     on = 1;
-                    brightness = (float) data[1] / 255.0;
+                    brightness = (float) rdata[1] / 255.0;
                     autom = 0;
                     break;
                 case 2: //Set to brighten automatically (linear)
                 case 3: //Set to brighten automatically (Bezier - for now interpreted as linear)
                     on = 1;
                     autom = 1;
-                    for(uint i = 0; i < min(8, received); i += 2){
-                        control_points[i] = cpoint{(float) rdata[i] / 255.0, rdata[i + 1]};
+                    for(uint i = 0; i < (8 < received ? 8 : received); i += 2){
+                        cpoint point = {(float) rdata[i] / 255.0, rdata[i + 1]};;
+                        control_points[i] = point;
                     }
                     break;
                 default: break;
@@ -142,7 +186,6 @@ void app_main(void){
 
         //Automatic brightness control for wakeup
         if(autom){
-            //To avoid overflow errors, remember to reboot at least once every 292 thousand years
             float t = (float) esp_timer_get_time() / 1000000.0f - tStart;
             if(0 /*bezier*/){
                 //Only linear interpolation for now

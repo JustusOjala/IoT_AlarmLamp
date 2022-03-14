@@ -1,20 +1,21 @@
 {
     "project_name":       "bootloader",
-    "project_path":       "/home/jojala/esp/esp-idf/components/bootloader/subproject",
-    "build_dir":          "/home/jojala/IoT_AlarmLamp/ESP32/build/bootloader",
-    "config_file":        "/home/jojala/IoT_AlarmLamp/ESP32/sdkconfig",
+    "project_path":       "/home/justus/esp/esp-idf/components/bootloader/subproject",
+    "build_dir":          "/home/justus/Aalto/IoT_AlarmLamp/ESP32/build/bootloader",
+    "config_file":        "/home/justus/Aalto/IoT_AlarmLamp/ESP32/sdkconfig",
     "config_defaults":    "",
     "app_elf":            "bootloader.elf",
     "app_bin":            "bootloader.bin",
-    "git_revision":       "v4.3.1-dirty",
+    "git_revision":       "v4.4-dirty",
     "target":             "esp32",
+    "rev":                "0",
     "phy_data_partition": "",
     "monitor_baud" :      "115200",
     "monitor_toolprefix": "xtensa-esp32-elf-",
     "config_environment" : {
-        "COMPONENT_KCONFIGS" : "/home/jojala/esp/esp-idf/components/efuse/Kconfig;/home/jojala/esp/esp-idf/components/esp32/Kconfig;/home/jojala/esp/esp-idf/components/esp_common/Kconfig;/home/jojala/esp/esp-idf/components/esp_system/Kconfig;/home/jojala/esp/esp-idf/components/log/Kconfig;/home/jojala/esp/esp-idf/components/newlib/Kconfig;/home/jojala/esp/esp-idf/components/spi_flash/Kconfig",
-        "COMPONENT_KCONFIGS_PROJBUILD" : "/home/jojala/esp/esp-idf/components/bootloader/Kconfig.projbuild;/home/jojala/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/home/jojala/esp/esp-idf/components/partition_table/Kconfig.projbuild"
+        "COMPONENT_KCONFIGS" : "/home/justus/esp/esp-idf/components/efuse/Kconfig;/home/justus/esp/esp-idf/components/esp32/Kconfig;/home/justus/esp/esp-idf/components/esp_common/Kconfig;/home/justus/esp/esp-idf/components/esp_hw_support/Kconfig;/home/justus/esp/esp-idf/components/esp_system/Kconfig;/home/justus/esp/esp-idf/components/freertos/Kconfig;/home/justus/esp/esp-idf/components/hal/Kconfig;/home/justus/esp/esp-idf/components/log/Kconfig;/home/justus/esp/esp-idf/components/newlib/Kconfig;/home/justus/esp/esp-idf/components/spi_flash/Kconfig",
+        "COMPONENT_KCONFIGS_PROJBUILD" : "/home/justus/esp/esp-idf/components/bootloader/Kconfig.projbuild;/home/justus/esp/esp-idf/components/esp_rom/Kconfig.projbuild;/home/justus/esp/esp-idf/components/esptool_py/Kconfig.projbuild;/home/justus/esp/esp-idf/components/partition_table/Kconfig.projbuild"
     },
-    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
-    "build_component_paths" : [ "/home/jojala/esp/esp-idf/components/bootloader", "/home/jojala/esp/esp-idf/components/bootloader_support", "/home/jojala/esp/esp-idf/components/efuse", "/home/jojala/esp/esp-idf/components/esp32", "/home/jojala/esp/esp-idf/components/esp_common", "/home/jojala/esp/esp-idf/components/esp_hw_support", "/home/jojala/esp/esp-idf/components/esp_rom", "/home/jojala/esp/esp-idf/components/esp_system", "/home/jojala/esp/esp-idf/components/esptool_py", "/home/jojala/esp/esp-idf/components/hal", "/home/jojala/esp/esp-idf/components/log", "/home/jojala/esp/esp-idf/components/bootloader/subproject/main", "/home/jojala/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/home/jojala/esp/esp-idf/components/newlib", "/home/jojala/esp/esp-idf/components/partition_table", "/home/jojala/esp/esp-idf/components/soc", "/home/jojala/esp/esp-idf/components/spi_flash", "/home/jojala/esp/esp-idf/components/xtensa", "" ]
+    "build_components" : [ "bootloader", "bootloader_support", "efuse", "esp32", "esp_common", "esp_hw_support", "esp_rom", "esp_system", "esptool_py", "freertos", "hal", "log", "main", "micro-ecc", "newlib", "partition_table", "soc", "spi_flash", "xtensa", "" ],
+    "build_component_paths" : [ "/home/justus/esp/esp-idf/components/bootloader", "/home/justus/esp/esp-idf/components/bootloader_support", "/home/justus/esp/esp-idf/components/efuse", "/home/justus/esp/esp-idf/components/esp32", "/home/justus/esp/esp-idf/components/esp_common", "/home/justus/esp/esp-idf/components/esp_hw_support", "/home/justus/esp/esp-idf/components/esp_rom", "/home/justus/esp/esp-idf/components/esp_system", "/home/justus/esp/esp-idf/components/esptool_py", "/home/justus/esp/esp-idf/components/freertos", "/home/justus/esp/esp-idf/components/hal", "/home/justus/esp/esp-idf/components/log", "/home/justus/esp/esp-idf/components/bootloader/subproject/main", "/home/justus/esp/esp-idf/components/bootloader/subproject/components/micro-ecc", "/home/justus/esp/esp-idf/components/newlib", "/home/justus/esp/esp-idf/components/partition_table", "/home/justus/esp/esp-idf/components/soc", "/home/justus/esp/esp-idf/components/spi_flash", "/home/justus/esp/esp-idf/components/xtensa", "" ]
 }
