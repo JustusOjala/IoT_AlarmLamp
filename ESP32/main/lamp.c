@@ -227,7 +227,8 @@ void app_main(void){
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
     
     //Current and previous potentiometer reading
-    int pot = 0; int prev = 0;
+    int pots[1000]; uint poti = 0;
+    int avg_pot = 0; int prev_avg = 0;
     
     //Button values
     int button_read = 0; uint64_t bstates = 0; unsigned int state = 0;
@@ -238,7 +239,7 @@ void app_main(void){
     //Values for wakeup brightness control
     int bezier = 0; //Whether or not the brightness curve is a bezier curve
     int autom = 0;  //Whether or not the brightness is currently determined automatically
-    cpoint control_points[4]; //The brightness curve control points
+    cpoint* control_points = NULL; //The brightness curve control points
 
     //Values for linear interpolation
     float k = 0;        //The slope of the current piece
@@ -265,11 +266,15 @@ void app_main(void){
             button_read = 0;
         }
 
-        //Check the potentiometer value, update brightness and override automatic
+        //Check the potentiometer value with smoothing, update brightness and override automatic
         //control if altered sufficiently
-        pot = adc1_get_raw(ADC1_CHANNEL_4);
-        if(abs(pot-prev) >= 10){
-            brightness = (float) pot / 4095.0f;
+        int pot = adc1_get_raw(ADC1_CHANNEL_4);
+        avg_pot += pot * 0.001 - pots[poti] * 0.001;
+        pots[poti] = pot;
+        poti++;
+        if(abs(avg_pot - prev_avg) > 100){
+            prev_avg = avg_pot;
+            brightness = (float) avg_pot / 4095.0f;
             if(brightness < 0.0) brightness = 0.0;
             if(brightness > 1.0) brightness = 1.0;
             autom = false;
@@ -296,6 +301,12 @@ void app_main(void){
                     pt = 0;
                     points = (received - 1) / 2;
                     ESP_LOGI(SPP_TAG, "Setting up linear interpolation with %i points", points);
+                    if(control_points) free(control_points);
+                    control_points = (cpoint*) malloc(points * sizeof(cpoint));
+                    if(!control_points){
+                        ESP_LOGI(SPP_TAG, "Memory allocation for cpoints failed.");
+                        break;
+                    }
                     for(uint i = 0; i < points; i++){
                         cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};;
                         control_points[i] = point;
@@ -309,6 +320,12 @@ void app_main(void){
                     pt = 0;
                     points = (received - 1) / 2;
                     ESP_LOGI(SPP_TAG, "Setting up Bezier interpolation with %i points", points);
+                    if(control_points) free(control_points);
+                    control_points = (cpoint*) malloc(points * sizeof(cpoint));
+                    if(!control_points){
+                        ESP_LOGI(SPP_TAG, "Memory allocation for cpoints failed.");
+                        break;
+                    }
                     for(uint i = 0; i < points; i++){
                         cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};;
                         control_points[i] = point;
@@ -338,8 +355,16 @@ void app_main(void){
                             k = (control_points[pt + 1].brightness - b0)/(t1 - t0);
                         }else if(t1 == t0){
                             brightness = control_points[pt + 1].brightness;
-                        }else autom = false;
-                    }else autom = false;
+                        }else{
+                            free(control_points);
+                            control_points = NULL;
+                            autom = false;
+                        }
+                    }else{
+                        free(control_points);
+                        control_points = NULL;
+                        autom = false;
+                    }
                 }else brightness = b0 + (t - t0)*k;
             }
         }
