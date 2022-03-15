@@ -57,7 +57,7 @@ static void esp_spp_cb(esp_spp_cb_event_t event, esp_spp_cb_param_t *param)
     case ESP_SPP_DATA_IND_EVT:
         rdata = (uint8_t*) malloc(param->data_ind.len);
         memcpy(rdata, param->data_ind.data, param->data_ind.len);
-        received = 1;
+        received = param->data_ind.len;
         break;
     case ESP_SPP_CONG_EVT:
         ESP_LOGI(SPP_TAG, "ESP_SPP_CONG_EVT");
@@ -241,11 +241,12 @@ void app_main(void){
     cpoint control_points[4]; //The brightness curve control points
 
     //Values for linear interpolation
-    float k = 0;    //The slope of the current piece
-    float b0 = 0;   //The vertical offset of the piece
-    float t0 = 0;   //The horizontal offset of the piece
-    unsigned i = 0; //Current first index
-    float t1 = 0;   //The stop time of the current piece
+    float k = 0;        //The slope of the current piece
+    float b0 = 0;       //The vertical offset of the piece
+    float t0 = 0;       //The horizontal offset of the piece
+    uint pt = 0;     //Current point
+    uint points = 0;    //Number of points
+    float t1 = 0;       //The stop time of the current piece
 
     float tStart = 0; //Start time
     while(1) {
@@ -275,7 +276,7 @@ void app_main(void){
         }
 
         if(received){
-            ESP_LOGI(SPP_TAG, "Command received");
+            ESP_LOGI(SPP_TAG, "Command received (%i bytes)", received);
             switch(rdata[0]){
                 case 0: //Turn off
                     on = 0;
@@ -289,13 +290,27 @@ void app_main(void){
                     ESP_LOGI(SPP_TAG, "Turning on; brightness %f", brightness);
                     break;
                 case 2: //Set to brighten automatically (linear)
-                    ESP_LOGI(SPP_TAG, "Setting up linear interpolation");
-                case 3: //Set to brighten automatically (Bezier - for now interpreted as linear)
-                    ESP_LOGI(SPP_TAG, "Setting up Bezier interpolation");
+                    bezier = 0;
                     on = 1;
                     autom = 1;
-                    for(uint i = 0; i < (8 < received ? 8 : received); i += 2){
-                        cpoint point = {(float) rdata[i] / 255.0, rdata[i + 1]};;
+                    pt = 0;
+                    points = (received - 1) / 2;
+                    ESP_LOGI(SPP_TAG, "Setting up linear interpolation with %i points", points);
+                    for(uint i = 0; i < points; i++){
+                        cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};;
+                        control_points[i] = point;
+                        ESP_LOGI(SPP_TAG, "Point %i: brightness %f, time %i", i, point.brightness, point.time);
+                    }
+                    break;
+                case 3: //Set to brighten automatically (Bezier - for now interpreted as linear)
+                    bezier = 1;
+                    on = 1;
+                    autom = 1;
+                    pt = 0;
+                    points = (received - 1) / 2;
+                    ESP_LOGI(SPP_TAG, "Setting up Bezier interpolation with %i points", points);
+                    for(uint i = 0; i < points; i++){
+                        cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};;
                         control_points[i] = point;
                         ESP_LOGI(SPP_TAG, "Point %i: brightness %f, time %i", i, point.brightness, point.time);
                     }
@@ -314,12 +329,12 @@ void app_main(void){
                 //Only linear interpolation for now
             }else{
                 if(t >= t1){
-                    i++;
-                    if(i < 3){
+                    pt++;
+                    if(pt < points){
                         t0 = t1;
-                        t1 = 60*control_points[i + 1].time;
-                        b0 = control_points[i].brightness;
-                        k = (control_points[i + 1].brightness - b0)/(t1 - t0);
+                        t1 = 60*control_points[pt + 1].time;
+                        b0 = control_points[pt].brightness;
+                        k = (control_points[pt + 1].brightness - b0)/(t1 - t0);
                     }else autom = false;
                 }else brightness = b0 + (t - t0)*k;
             }
