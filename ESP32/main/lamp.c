@@ -334,7 +334,11 @@ void app_main(void){
                         t0 = t1;
                         t1 = 60*control_points[pt + 1].time;
                         b0 = control_points[pt].brightness;
-                        k = (control_points[pt + 1].brightness - b0)/(t1 - t0);
+                        if(t1 > t0){
+                            k = (control_points[pt + 1].brightness - b0)/(t1 - t0);
+                        }else if(t1 == t0){
+                            brightness = control_points[pt + 1].brightness;
+                        }else autom = false;
                     }else autom = false;
                 }else brightness = b0 + (t - t0)*k;
             }
