@@ -1,4 +1,4 @@
-# Install script for directory: /home/justus/esp/esp-idf/components/esp_hw_support
+# Install script for directory: /home/jojala/esp/esp-idf/components/esp_hw_support
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,12 +34,11 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/home/justus/.espressif/tools/xtensa-esp32-elf/esp-2021r2-8.4.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-objdump")
+  set(CMAKE_OBJDUMP "/home/jojala/.espressif/tools/xtensa-esp32-elf/esp-2022r1-11.2.0/xtensa-esp32-elf/bin/xtensa-esp32-elf-objdump")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
-  # Include the install script for each subdirectory.
-  include("/home/justus/Aalto/IoT_AlarmLamp/ESP32/build/bootloader/esp-idf/esp_hw_support/port/esp32/cmake_install.cmake")
-
+  # Include the install script for the subdirectory.
+  include("/home/jojala/Projects/IoT_AlarmLamp/ESP32/build/bootloader/esp-idf/esp_hw_support/port/esp32/cmake_install.cmake")
 endif()
 
