@@ -16,9 +16,9 @@
 
 #define mos_pin 14
 #define button 26
+#define NUM_READINGS 100
 
 #define SPP_TAG "IOT_LAMP"
-static const char *TAG = "example";
 
 int received = 0;
 uint8_t* rdata = NULL;
@@ -136,18 +136,13 @@ void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 }
 
 void app_main(void){    
-    ESP_LOGI(TAG, "ENTER MAIN");
     //Initialize bluetooth
     esp_err_t ret = nvs_flash_init();
-    ESP_LOGI(TAG, "NVS");
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
-        ESP_LOGI(TAG, "BT INIT ENTER");
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
     }
     ESP_ERROR_CHECK( ret );
-
-    ESP_LOGI(TAG, "BT INIT COMPLETE");
 
     ESP_ERROR_CHECK(esp_bt_controller_mem_release(ESP_BT_MODE_BLE));
 
@@ -202,8 +197,6 @@ void app_main(void){
     esp_bt_pin_code_t pin_code;
     esp_bt_gap_set_pin(pin_type, 0, pin_code);
 
-    ESP_LOGI(TAG, "BT DEFINED");
-
     //Initialize LED PWM timer
     ledc_timer_config_t mos_timer = {
         .speed_mode         = LEDC_LOW_SPEED_MODE,
@@ -226,22 +219,16 @@ void app_main(void){
     };
     ESP_ERROR_CHECK(ledc_channel_config(&mos_channel));
 
-    ESP_LOGI(TAG, "LIGHT INIT");
-
     //configure button pin
     gpio_reset_pin(button);
     gpio_set_direction(button, GPIO_MODE_INPUT);
     gpio_set_pull_mode(button, GPIO_PULLDOWN_ONLY);
 
-    ESP_LOGI(TAG, "BUTTON INIT");
-
     //Configure ADC
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
-
-    ESP_LOGI(TAG, "ADC INIT");
     
     //Current and previous potentiometer reading
-    int pots[1000]; uint poti = 0;
+    int pots[NUM_READINGS]; uint poti = 0;
     int avg_pot = 0; int prev_avg = 0;
     
     //Button values
@@ -265,9 +252,7 @@ void app_main(void){
 
     float tStart = 0; //Start time
 
-    ESP_LOGI(TAG, "VARIABLE INIT");
     while(1) {
-        ESP_LOGI(TAG, "MAIN LOOP");
         //Take button reading with debouncing
         if(gpio_get_level(button)){
             bstates |= 1 << state;
@@ -287,8 +272,8 @@ void app_main(void){
         //control if altered sufficiently
         int pot = adc1_get_raw(ADC1_CHANNEL_4);
         avg_pot += pot * 0.001 - pots[poti] * 0.001;
-        pots[poti] = pot;
-        poti++;
+        pots[poti] = 1;
+        poti = (poti + 1) % NUM_READINGS;
         if(abs(avg_pot - prev_avg) > 100){
             prev_avg = avg_pot;
             brightness = (float) avg_pot / 4095.0f;

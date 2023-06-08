@@ -8,6 +8,8 @@
     "idf.port": "/dev/ttyUSB0",
     "files.associations": {
         "esp_log.h": "c",
-        "adc.h": "c"
+        "adc.h": "c",
+        "stdio.h": "c",
+        "stdbool.h": "c"
     }
 }

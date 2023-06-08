@@ -8,6 +8,7 @@
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/bootloader_support/libbootloader_support.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/esp_partition/libesp_partition.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/app_update/libapp_update.a
+/home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/esp_mm/libesp_mm.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/spi_flash/libspi_flash.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/pthread/libpthread.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/esp_system/libesp_system.a
@@ -30,6 +31,7 @@
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/lwip/liblwip.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/esp_netif/libesp_netif.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/wpa_supplicant/libwpa_supplicant.a
+/home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/esp_coex/libesp_coex.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/esp_wifi/libesp_wifi.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/bt/libbt.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/unity/libunity.a
@@ -57,6 +59,5 @@
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/mqtt/libmqtt.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/perfmon/libperfmon.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/spiffs/libspiffs.a
-/home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/ulp/libulp.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/wifi_provisioning/libwifi_provisioning.a
 /home/jojala/Projects/IoT_AlarmLamp/ESP32/build/esp-idf/main/libmain.a
