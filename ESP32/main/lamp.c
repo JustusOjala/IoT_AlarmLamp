@@ -111,11 +111,11 @@ void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 
 #if (CONFIG_BT_SSP_ENABLED == true)
     case ESP_BT_GAP_CFM_REQ_EVT:
-        ESP_LOGI(SPP_TAG, "ESP_BT_GAP_CFM_REQ_EVT Please compare the numeric value: %d", param->cfm_req.num_val);
+        ESP_LOGI(SPP_TAG, "ESP_BT_GAP_CFM_REQ_EVT Please compare the numeric value: %d", (int) param->cfm_req.num_val);
         esp_bt_gap_ssp_confirm_reply(param->cfm_req.bda, true);
         break;
     case ESP_BT_GAP_KEY_NOTIF_EVT:
-        ESP_LOGI(SPP_TAG, "ESP_BT_GAP_KEY_NOTIF_EVT passkey:%d", param->key_notif.passkey);
+        ESP_LOGI(SPP_TAG, "ESP_BT_GAP_KEY_NOTIF_EVT passkey:%d", (int) param->key_notif.passkey);
         break;
     case ESP_BT_GAP_KEY_REQ_EVT:
         ESP_LOGI(SPP_TAG, "ESP_BT_GAP_KEY_REQ_EVT Please enter passkey!");
@@ -123,11 +123,11 @@ void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 #endif
 
     case ESP_BT_GAP_MODE_CHG_EVT:
-        ESP_LOGI(SPP_TAG, "ESP_BT_GAP_MODE_CHG_EVT mode:%d", param->mode_chg.mode);
+        ESP_LOGI(SPP_TAG, "ESP_BT_GAP_MODE_CHG_EVT mode:%d", (int) param->mode_chg.mode);
         break;
 
     default: {
-        ESP_LOGI(SPP_TAG, "event: %d", event);
+        ESP_LOGI(SPP_TAG, "event: %d", (int) event);
         break;
     }
     }
@@ -135,8 +135,10 @@ void esp_bt_gap_cb(esp_bt_gap_cb_event_t event, esp_bt_gap_cb_param_t *param)
 }
 
 void app_main(void){    
+    ESP_LOGI(SPP_TAG, "Main entry");
     //Initialize bluetooth
     esp_err_t ret = nvs_flash_init();
+    ESP_LOGI(SPP_TAG, "Nvs Init comp");
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
         ESP_ERROR_CHECK(nvs_flash_erase());
         ret = nvs_flash_init();
@@ -281,7 +283,7 @@ void app_main(void){
         }
 
         if(received){
-            ESP_LOGI(SPP_TAG, "Command received (%i bytes)", received);
+            ESP_LOGI(SPP_TAG, "Command received (%i bytes)", (int) received);
             switch(rdata[0]){
                 case 0: //Turn off
                     on = 0;
@@ -300,7 +302,7 @@ void app_main(void){
                     autom = 1;
                     pt = 0;
                     points = (received - 1) / 2;
-                    ESP_LOGI(SPP_TAG, "Setting up linear interpolation with %i points", points);
+                    ESP_LOGI(SPP_TAG, "Setting up linear interpolation with %i points", (int) points);
                     if(control_points) free(control_points);
                     control_points = (cpoint*) malloc(points * sizeof(cpoint));
                     if(!control_points){
@@ -319,7 +321,7 @@ void app_main(void){
                     autom = 1;
                     pt = 0;
                     points = (received - 1) / 2;
-                    ESP_LOGI(SPP_TAG, "Setting up Bezier interpolation with %i points", points);
+                    ESP_LOGI(SPP_TAG, "Setting up Bezier interpolation with %i points", (int) points);
                     if(control_points) free(control_points);
                     control_points = (cpoint*) malloc(points * sizeof(cpoint));
                     if(!control_points){
