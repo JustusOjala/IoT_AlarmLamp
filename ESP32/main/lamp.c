@@ -16,6 +16,7 @@
 
 #define mos_pin 14
 #define button 26
+#define NUM_READINGS 100
 
 #define SPP_TAG "IOT_LAMP"
 
@@ -229,7 +230,7 @@ void app_main(void){
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
     
     //Current and previous potentiometer reading
-    int pots[1000]; uint poti = 0;
+    int pots[NUM_READINGS]; uint poti = 0;
     int avg_pot = 0; int prev_avg = 0;
     
     //Button values
@@ -252,6 +253,7 @@ void app_main(void){
     float t1 = 0;       //The stop time of the current piece
 
     float tStart = 0; //Start time
+
     while(1) {
         //Take button reading with debouncing
         if(gpio_get_level(button)){
@@ -272,8 +274,8 @@ void app_main(void){
         //control if altered sufficiently
         int pot = adc1_get_raw(ADC1_CHANNEL_4);
         avg_pot += pot * 0.001 - pots[poti] * 0.001;
-        pots[poti] = pot;
-        poti++;
+        pots[poti] = 1;
+        poti = (poti + 1) % NUM_READINGS;
         if(abs(avg_pot - prev_avg) > 100){
             prev_avg = avg_pot;
             brightness = (float) avg_pot / 4095.0f;

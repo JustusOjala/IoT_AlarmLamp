@@ -1,0 +1,43 @@
+2023-06-07 22:35:06,810 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_STARTED
+2023-06-07 22:35:06,810 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_READY2CONNECT
+2023-06-07 22:35:07,156 - Debug Adapter (main) - ERROR - gdb executable could not be resolved from "xtensa-esp32-elf-gdb"
+Traceback (most recent call last):
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/gdb.py", line 59, in __init__
+    self._gdbmi = GdbController(command=[gdb_path])
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: GdbController.__init__() got an unexpected keyword argument 'command'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/command_processor.py", line 52, in __call__
+    on_request(protocol_message)
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/command_processor.py", line 75, in on_initialize_request
+    raise e
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/command_processor.py", line 70, in on_initialize_request
+    self.da.adapter_init()
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_adapter.py", line 329, in adapter_init
+    raise e
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_adapter.py", line 325, in adapter_init
+    self.start_gdb()
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_adapter.py", line 659, in start_gdb
+    raise e
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_adapter.py", line 633, in start_gdb
+    self._gdb = dbg.create_gdb(chip_name=self.args.device_name,
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/__init__.py", line 75, in create_gdb
+    return gdb_cls(**gdb_init_args)
+           ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/hw_specific/esp.py", line 277, in __init__
+    super(GdbEsp32, self).__init__(gdb_path=gdb_path, remote_target=remote_target,
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/hw_specific/esp.py", line 224, in __init__
+    GdbXtensa.__init__(self, gdb_path=gdb_path, remote_target=remote_target,
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/hw_specific/xtensa.py", line 70, in __init__
+    super(GdbXtensa, self).__init__(gdb_path=gdb_path, remote_target=remote_target, extended_remote_mode=extended_remote_mode,
+  File "/home/jojala/.vscode-oss/extensions/espressif.esp-idf-extension-1.6.3-universal/esp_debug_adapter/debug_adapter/debug_backend/debug_backend/gdb.py", line 62, in __init__
+    self._gdbmi = GdbController(gdb_path=gdb_path)
+                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/jojala/.espressif/python_env/idf5.1_py3.11_env/lib/python3.11/site-packages/pygdbmi/gdbcontroller.py", line 99, in __init__
+    raise ValueError(
+ValueError: gdb executable could not be resolved from "xtensa-esp32-elf-gdb"
+2023-06-07 22:35:07,206 - Debug Adapter (main) - CRITICAL - Debug adapter -> Extension: DEBUG_ADAPTER_STOPPED

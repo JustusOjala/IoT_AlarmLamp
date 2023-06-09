@@ -31,7 +31,7 @@ class MainActivity : AppCompatActivity() {
         if(checkSelfPermission("android.permission.BLUETOOTH_CONNECT") != PERMISSION_GRANTED) return
 
         val pairedDevices: Set<BluetoothDevice>? = blA?.bondedDevices
-        lamps = pairedDevices?.filter{it.name == "IOT_LAMP"}
+        lamps = pairedDevices?.filter{it.name == "ESP_LAMP" || it.address == "A8:03:2A:6A:2A:52"}
         if(lamps == null || lamps?.isEmpty() == true){
             return
         }
@@ -44,11 +44,11 @@ class MainActivity : AppCompatActivity() {
         val message: ByteArray = ByteArray(2)
         message[0] = 1
         message[1] = -1
-        oStream!!.write(message)
+        oStream?.write(message) ?: return
     }
 
     private fun turnOff(){
-        oStream!!.write(0)
+        oStream?.write(0) ?: return
     }
 
     private fun setBrightness(){
