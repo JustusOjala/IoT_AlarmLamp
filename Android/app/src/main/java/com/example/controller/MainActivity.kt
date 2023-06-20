@@ -37,6 +37,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         val socket: BluetoothSocket = lamps?.first()!!.createRfcommSocketToServiceRecord(UUID.randomUUID())
+        blA?.cancelDiscovery()
+        val a = socket.connectionType
+        val b = lamps?.first()?.bondState
+        val c = socket.connectionType
+        val d = socket.isConnected
+        socket.connect()
         oStream = socket.outputStream
     }
 
