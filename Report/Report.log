@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Arch Linux) (preloaded format=pdflatex 2023.9.7)  3 OCT 2023 10:38
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023/Arch Linux) (preloaded format=pdflatex 2023.9.7)  3 OCT 2023 11:41
 entering extended mode
  restricted \write18 enabled.
  file:line:error style messages enabled.
@@ -275,26 +275,105 @@ Package biblatex Info: ... and expl3
 Package: xparse 2023-02-02 L3 Experimental document command parser
 )
 Package: blx-case-expl3 2023/03/05 v3.19 expl3 case changing code for biblatex
+)) (/usr/share/texmf-dist/tex/latex/graphics/graphicx.sty
+Package: graphicx 2021/09/16 v1.2d Enhanced LaTeX Graphics (DPC,SPQR)
+ (/usr/share/texmf-dist/tex/latex/graphics/graphics.sty
+Package: graphics 2022/03/10 v1.4e Standard LaTeX Graphics (DPC,SPQR)
+ (/usr/share/texmf-dist/tex/latex/graphics/trig.sty
+Package: trig 2021/08/11 v1.11 sin cos tan (DPC)
+) (/usr/share/texmf-dist/tex/latex/graphics-cfg/graphics.cfg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 107.
+ (/usr/share/texmf-dist/tex/latex/graphics-def/pdftex.def
+File: pdftex.def 2022/09/22 v1.2b Graphics/color driver for pdftex
 ))
-\@quotelevel=\count387
-\@quotereset=\count388
+\Gin@req@height=\dimen141
+\Gin@req@width=\dimen142
+) (/usr/share/texmf-dist/tex/latex/amsmath/amsmath.sty
+Package: amsmath 2022/04/08 v2.17n AMS math features
+\@mathmargin=\skip72
+
+For additional information on amsmath, use the `?' option.
+(/usr/share/texmf-dist/tex/latex/amsmath/amstext.sty
+Package: amstext 2021/08/26 v2.01 AMS text
+ (/usr/share/texmf-dist/tex/latex/amsmath/amsgen.sty
+File: amsgen.sty 1999/11/30 v2.0 generic functions
+\@emptytoks=\toks17
+\ex@=\dimen143
+)) (/usr/share/texmf-dist/tex/latex/amsmath/amsbsy.sty
+Package: amsbsy 1999/11/29 v1.2d Bold Symbols
+\pmbraise@=\dimen144
+) (/usr/share/texmf-dist/tex/latex/amsmath/amsopn.sty
+Package: amsopn 2022/04/08 v2.04 operator names
+)
+\inf@bad=\count387
+LaTeX Info: Redefining \frac on input line 234.
+\uproot@=\count388
+\leftroot@=\count389
+LaTeX Info: Redefining \overline on input line 399.
+LaTeX Info: Redefining \colon on input line 410.
+\classnum@=\count390
+\DOTSCASE@=\count391
+LaTeX Info: Redefining \ldots on input line 496.
+LaTeX Info: Redefining \dots on input line 499.
+LaTeX Info: Redefining \cdots on input line 620.
+\Mathstrutbox@=\box52
+\strutbox@=\box53
+LaTeX Info: Redefining \big on input line 722.
+LaTeX Info: Redefining \Big on input line 723.
+LaTeX Info: Redefining \bigg on input line 724.
+LaTeX Info: Redefining \Bigg on input line 725.
+\big@size=\dimen145
+LaTeX Font Info:    Redeclaring font encoding OML on input line 743.
+LaTeX Font Info:    Redeclaring font encoding OMS on input line 744.
+\macc@depth=\count392
+LaTeX Info: Redefining \bmod on input line 905.
+LaTeX Info: Redefining \pmod on input line 910.
+LaTeX Info: Redefining \smash on input line 940.
+LaTeX Info: Redefining \relbar on input line 970.
+LaTeX Info: Redefining \Relbar on input line 971.
+\c@MaxMatrixCols=\count393
+\dotsspace@=\muskip21
+\c@parentequation=\count394
+\dspbrk@lvl=\count395
+\tag@help=\toks18
+\row@=\count396
+\column@=\count397
+\maxfields@=\count398
+\andhelp@=\toks19
+\eqnshift@=\dimen146
+\alignsep@=\dimen147
+\tagshift@=\dimen148
+\tagwidth@=\dimen149
+\totwidth@=\dimen150
+\lineht@=\dimen151
+\@envbody=\toks20
+\multlinegap=\skip73
+\multlinetaggap=\skip74
+\mathdisplay@stack=\toks21
+LaTeX Info: Redefining \[ on input line 2953.
+LaTeX Info: Redefining \] on input line 2954.
+)
+\@quotelevel=\count399
+\@quotereset=\count400
  (./Report.aux)
 \openout1 = `Report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 8.
-LaTeX Font Info:    ... okay on input line 8.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
+LaTeX Font Info:    ... okay on input line 10.
 Package biblatex Info: Trying to load language 'english'...
 Package biblatex Info: ... file 'english.lbx' found.
  (/usr/share/texmf-dist/tex/latex/biblatex/lbx/english.lbx
@@ -308,49 +387,87 @@ Package biblatex Info: Automatic encoding selection.
 Package biblatex Info: Trying to load bibliographic data...
 Package biblatex Info: ... file 'Report.bbl' found.
  (./Report.bbl)
-Package biblatex Info: Reference section=0 on input line 8.
-Package biblatex Info: Reference segment=0 on input line 8.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <12> on input line 10.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <8> on input line 10.
-LaTeX Font Info:    External font `cmex10' loaded for size
-(Font)              <6> on input line 10.
- [1
+Package biblatex Info: Reference section=0 on input line 10.
+Package biblatex Info: Reference segment=0 on input line 10.
+ (/usr/share/texmf-dist/tex/context/base/mkii/supp-pdf.mkii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count401
+\scratchdimen=\dimen152
+\scratchbox=\box54
+\nofMPsegments=\count402
+\nofMParguments=\count403
+\everyMPshowfont=\toks22
+\MPscratchCnt=\count404
+\MPscratchDim=\dimen153
+\MPnumerator=\count405
+\makeMPintoPDFobject=\count406
+\everyMPtoPDFconversion=\toks23
+) (/usr/share/texmf-dist/tex/latex/epstopdf-pkg/epstopdf-base.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+ (/usr/share/texmf-dist/tex/latex/grfext/grfext.sty
+Package: grfext 2019/12/03 v1.3 Manage graphics extensions (HO)
+ (/usr/share/texmf-dist/tex/generic/kvdefinekeys/kvdefinekeys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+))
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 485.
+Package grfext Info: Graphics extension search list:
+(grfext)             [.pdf,.png,.jpg,.mps,.jpeg,.jbig2,.jb2,.PDF,.PNG,.JPG,.JPEG,.JBIG2,.JB2,.eps]
+(grfext)             \AppendGraphicsExtensions on input line 504.
+ (/usr/share/texmf-dist/tex/latex/latexconfig/epstopdf-sys.cfg
+File: epstopdf-sys.cfg 2010/07/13 v1.3 Configuration of (r)epstopdf for TeX Live
+)) [1
 
 {/var/lib/texmf/fonts/map/pdftex/updmap/pdftex.map}]
-Overfull \hbox (5.26926pt too wide) in paragraph at lines 19--20
+Overfull \hbox (5.26926pt too wide) in paragraph at lines 21--22
 \OT1/cmr/m/n/10 siis her^^?atyskello, jo-hon li-itetty valo kirkas-tuu hil-jalleen en-nen her^^?atyst^^?a. Taustalla
  []
 
 
-Overfull \hbox (1.11176pt too wide) in paragraph at lines 21--22
+Overfull \hbox (1.11176pt too wide) in paragraph at lines 23--24
 []\OT1/cmr/m/n/10 Ajatus on, ett^^?a puhe-li-men her^^?atyskello voi ha-lutessa l^^?ahett^^?a^^?a en-nen her^^?atyst^^?a
  []
 
 [2]
-Overfull \hbox (36.19536pt too wide) in paragraph at lines 32--33
+Overfull \hbox (36.19536pt too wide) in paragraph at lines 34--35
 []\OT1/cmr/m/n/10 Elektroniikan pro-to-tyyppi on raken-nettu pro-tolevyyn kytketyn ESP32-kehitysalustan
  []
 
-[3] [4]
-Overfull \hbox (13.00078pt too wide) in paragraph at lines 50--51
+<Kokolaite.JPG, id=13, 4047.12pt x 3035.34pt>
+File: Kokolaite.JPG Graphic file (type jpg)
+<use Kokolaite.JPG>
+Package pdftex.def Info: Kokolaite.JPG  used on input line 43.
+(pdftex.def)             Requested size: 172.5pt x 129.35919pt.
+<Elektroniikka.JPG, id=15, 4047.12pt x 3035.34pt>
+File: Elektroniikka.JPG Graphic file (type jpg)
+<use Elektroniikka.JPG>
+Package pdftex.def Info: Elektroniikka.JPG  used on input line 43.
+(pdftex.def)             Requested size: 172.5pt x 129.35919pt.
+File: Kokolaite.JPG Graphic file (type jpg)
+<use Kokolaite.JPG>
+Package pdftex.def Info: Kokolaite.JPG  used on input line 43.
+(pdftex.def)             Requested size: 172.5pt x 129.35919pt.
+File: Elektroniikka.JPG Graphic file (type jpg)
+<use Elektroniikka.JPG>
+Package pdftex.def Info: Elektroniikka.JPG  used on input line 43.
+(pdftex.def)             Requested size: 172.5pt x 129.35919pt.
+[3 <./Kokolaite.JPG> <./Elektroniikka.JPG>] [4]
+Overfull \hbox (13.00078pt too wide) in paragraph at lines 58--59
 []\OT1/cmr/m/n/10 Laitteen tes-taamiseksi on kokeiltu kirkkau-den muut-tamista ja vir-ran kytkemist^^?a
  []
 
 
-Overfull \hbox (24.35269pt too wide) in paragraph at lines 50--51
+Overfull \hbox (24.35269pt too wide) in paragraph at lines 58--59
 \OT1/cmr/m/n/10 sek^^?a et^^?an^^?a puhe-li-men BT-sarjaterminaalista ett^^?a mekaani-sista oh-jaimista. Kirkkautta
  []
 
 [5]
-Overfull \hbox (15.36194pt too wide) in paragraph at lines 55--56
+Overfull \hbox (15.36194pt too wide) in paragraph at lines 63--64
 \OT1/cmr/m/n/10 Ker^^?atk^^?a^^?a t^^?ah^^?an ty^^?on keskeiset saavu-tuk-set ja ver-tailkaa niit^^?a vaa-timusm^^?a^^?arittelyyn. 
  []
 
 [6]
 
-LaTeX Warning: Empty bibliography on input line 62.
+LaTeX Warning: Empty bibliography on input line 70.
 
 (./Report.aux)
 Package logreq Info: Writing requests to 'Report.run.xml'.
@@ -358,18 +475,18 @@ Package logreq Info: Writing requests to 'Report.run.xml'.
 
  ) 
 Here is how much of TeX's memory you used:
- 8354 strings out of 476872
- 163901 string characters out of 5820379
- 1856388 words of memory out of 5000000
- 28702 multiletter control sequences out of 15000+600000
- 515927 words of font info for 44 fonts, out of 8000000 for 9000
+ 9983 strings out of 476872
+ 187919 string characters out of 5820379
+ 1858388 words of memory out of 5000000
+ 30273 multiletter control sequences out of 15000+600000
+ 517055 words of font info for 49 fonts, out of 8000000 for 9000
  725 hyphenation exceptions out of 8191
- 63i,6n,68p,722b,801s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ 63i,11n,68p,722b,801s stack positions out of 10000i,1000n,20000p,200000b,200000s
 </usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb>
-Output written on Report.pdf (6 pages, 59961 bytes).
+Output written on Report.pdf (6 pages, 6662868 bytes).
 PDF statistics:
- 43 PDF objects out of 1000 (max. 8388607)
- 26 compressed objects within 1 object stream
+ 51 PDF objects out of 1000 (max. 8388607)
+ 28 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 1 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 35 words of extra memory for PDF output out of 10000 (max. 10000000)
 

@@ -1,6 +1,8 @@
 \documentclass{article}
 
 \usepackage{biblatex}
+\usepackage{graphicx}
+\usepackage{amsmath}
 
 \author{Justus Ojala}
 \title{Loppuraportti: IoT-sarastusvalo}
@@ -34,6 +36,12 @@ Elektroniikan prototyyppi on rakennettu protolevyyn kytketyn ESP32-kehitysalusta
 ESP32 ohjaa MOSFETia ja käyttää sitä PWM-hakkurina. ESP32 itse saa ohjauksensa joko Bluetoothin yli tai potentiometriltä ja mikrokytkimeltä, jotka ajavat virtakytkimen ja kirkkaudensäädön virkoja. Viimeisenä säädetty ohjaus on etusijalla, ja mekaaniset ohjaimet ohittavat ohjelmoidun kirkastumisen.
 
 Laite vastaanottaa Bluetoothin kautta yksinkertaisia signaaleja, mahdolliset komennot ovat pois, päälle <kirkkaus> ja ohjelmoitu kirkastuminen <hallintapisteet>. Laite lukee jatkuvasti kytkimen ja potentiometrin asentoa, ja päivittää PWM-aliohjelman ohjausarvon niiden mukaisesti. Jos laite on vastaanottanut viestin, se asettaa kirkkauden sen mukaisesti tai alkaa interpoloimaan ohjauspisteiden välilä. Interpolaatio keskeytyy, jos laite saa muita ohjauksia. Laitteen puolen koodi on liitteenä.
+
+\begin{align*}
+    \includegraphics*[width=0.5\textwidth]{Kokolaite.JPG}
+    \includegraphics*[width=0.5\textwidth]{Elektroniikka.JPG}    
+\end{align*}
+
 
 \newpage
 \section*{Jatkokehitystä}
