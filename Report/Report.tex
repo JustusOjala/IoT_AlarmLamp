@@ -1,0 +1,64 @@
+\documentclass{article}
+
+\usepackage{biblatex}
+
+\author{Justus Ojala}
+\title{Loppuraportti: IoT-sarastusvalo}
+
+\begin{document}
+
+\maketitle
+
+\newpage
+\section*{Johdanto}
+
+Käyttäkää tätä mallipohjaa elektroniikkaprojektinne raportoimiseen. Raportti kirjoitetaan omin sanoin ja omaan työhön jne. perustuen. Muualta tarvittaessa asiallisesti lainattuun sisältöön on pyrittävä aina laittamaan sopiva viittaus lähteeseen, koska muuten on kyse yleensä ns. plagioinnista (mikä ei ole koskaan sallittua).
+Johdantoon tulee lyhyt kuvaus siitä, mitä olette tekemässä ja mahdollisesti asian taustoja.
+Huomatkaa, että mallipohja ei välttämättä sellaisenaan suoraan sovellu työnne raportointiin. Otsikoita saa tarvittaessa muokata. Voitte myös lisätä raporttiin otsikkotasoja (alaotsikot) mikäli ne selkiyttävät tekstiä. Muistakaa lopuksi poistaa nämä mallipohjan lukujen ohjetekstit – ne on tarkoitettu vain luettaviksi ja huomioitaviksi.
+
+Työn tavoitteena oli rakentaa puhelimeen liittyvä sarastusvalo, käytännössä siis herätyskello, johon liitetty valo kirkastuu hiljalleen ennen herätystä. Taustalla tähän on työn tekijän torkutustaipumus.
+
+Ajatus on, että puhelimen herätyskello voi halutessa lähettää ennen herätystä valolle signaalin, joka saa sen kirkastumaan toivotusti. Valon tulisi toimia samalla tavallisena kirkkaussäädettävänä valona.
+
+\newpage
+\section*{Toteutettu laitteisto}
+
+Tähän kohtaan tulee valmiin laitteenne kuvaus spesifikaatioineen, mahdollisesti olennaiset osat vaatimusmäärittelystä ja viittaus vaatimusmäärittelyyn. Nämä voivat olla osin johdannossakin.
+Teksti elävöityy, kun liitätte sekaan laatimanne lohkokaaviot, piirikaaviot, ohjelmat ja valokuvia esim. valmiista laitteesta, piirikorteista ja koejärjestelyistä. Huomatkaa, että suurikokoiset piirikaaviot ja laajat ohjelmalistaukset kannattaa laittaa liitteiksi ja esittää tässä vain niiden parhaat palat.
+Keskittykää kuvaamaan laitteistonne, älkää niinkään sitä mitä kurssilla teitte. Kurssilla opituille asioille on oma laajempi kohtansa, Liite 1.
+
+Valo on rakennettu tavallisesta pöytälampusta korvaamalla sen tehoelektroniikka itse tehdyllä ESP32-ohjatulla. Prototyypissä tehoelektroniikka on itse valaisimen ulkopuolella, ja sisäinen elektroniikka on ohitettu. Valaisinelementti on kytketty suoraan tehonsyöttöön, ja uusi elektroniikka tulee teholähteen ja lampun syötön väliin.
+
+Elektroniikan prototyyppi on rakennettu protolevyyn kytketyn ESP32-kehitysalustan ympärille. Se ottaa syötön lampun teholähteeltä ja jatkaa sen eteenpäin vaihdettavan esivastuksen ja MOSFETin läpi. ESP32 saa käyttöjännitteensä lineaariregulaattorilta, joka puodottaa jännitteeen 11 V -> 5 V.
+
+ESP32 ohjaa MOSFETia ja käyttää sitä PWM-hakkurina. ESP32 itse saa ohjauksensa joko Bluetoothin yli tai potentiometriltä ja mikrokytkimeltä, jotka ajavat virtakytkimen ja kirkkaudensäädön virkoja. Viimeisenä säädetty ohjaus on etusijalla, ja mekaaniset ohjaimet ohittavat ohjelmoidun kirkastumisen.
+
+Laite vastaanottaa Bluetoothin kautta yksinkertaisia signaaleja, mahdolliset komennot ovat pois, päälle <kirkkaus> ja ohjelmoitu kirkastuminen <hallintapisteet>. Laite lukee jatkuvasti kytkimen ja potentiometrin asentoa, ja päivittää PWM-aliohjelman ohjausarvon niiden mukaisesti. Jos laite on vastaanottanut viestin, se asettaa kirkkauden sen mukaisesti tai alkaa interpoloimaan ohjauspisteiden välilä. Interpolaatio keskeytyy, jos laite saa muita ohjauksia. Laitteen puolen koodi on liitteenä.
+
+\newpage
+\section*{Jatkokehitystä}
+
+Laitteeseen olisi tarkoitus tehdä kunnollinen piirilevy, joka käyttäisi ESP32-pakettia sellaisenaan kehitysalustan sijasta. Piirilevyn olisi tarkoitus olla riittävän pieni, että sen saa asennettua alkuperäisen paikalle lampun sisään. Tällöin ei tarvitsisi tehdä uutta kotelointia, vain muokata alkuperäistä kytkimen ja potentiometrin käyttämiseksi.
+
+Nykyisellään laitetta ohjataan lähettämällä sille tavuja raakana esimerkiksi Bluetooth-terminaalin kautta. Tarkoitus olisi tehdä sille puhelinsovellus, joka mieluiten linkittyy vielä puhelimen ensisijaiseen herätyskelloon. Tämä sovellus on vielä työna alla, ja siltä puuttuu esimerkiksi kyky lähettää viestejä Bluetoothin yli sekä kyky ajastaa herätyksiä tai reagoida ulkoisiin. Lisäksi voisi ehkä siirtyä Bluetoothista Matter-verkkoon, jota ei ollut vielä olemassa projektin alussa.
+
+\newpage
+\section*{Mittaukset ja testaus}
+
+Esittäkää tässä laitteen suorituskyvyn varmistamiseksi tehdyt testit ja mittaukset, niihin käytetyt mittauslaitteistot ja kytkennät ja mittaus- tai testitulokset. Antakaa tulokset taulukoina, kaavioina, kuvina tai numeroarvoina tekstissä sen mukaan, mikä on tarkoituksenmukaisinta. Ainakin olennaisimmista tuloksista on hyvä tehdä sekä aiheeseen että tilanteeseen sopivaa analyysia ja sen perusteella myös arviointia tukemaan jatkossa esitettäviä johtopäätöksiä.
+
+Laitteen testaamiseksi on kokeiltu kirkkauden muuttamista ja virran kytkemistä sekä etänä puhelimen BT-sarjaterminaalista että mekaanisista ohjaimista. Kirkkautta on arvioitu silmämääräisesti.
+
+\newpage
+\section*{Johtopäätökset}
+
+Kerätkää tähän työn keskeiset saavutukset ja vertailkaa niitä vaatimusmäärittelyyn.
+
+Laite toimii nykyisellään kirkkaussäädettävänä valaisimena. Etäohjausta ei käytännössä voi pitää toimivana, koska vaikka laite vastaanottaakin viestejä ja reagoi niihin oikein. Ilman kunnollista käyttöliittymää etäohjausta on kuitenkin hyvin kömpelöä käyttää. Myöskin automaatio puuttuu vielä, joten laite ei toimi vielä herätyskellona.
+
+Toiminnalliset puutteet ovat kiinni vain puhelinsovelluksesta, laite itse on niiden osalta valmis. Laitteen omat puutteet liittyvät lähinnä viimestelyyn ja kotelointiin. Muuten laite vastaa vaatimusmäärittelyä.
+
+\newpage
+\printbibliography
+
+\end{document}

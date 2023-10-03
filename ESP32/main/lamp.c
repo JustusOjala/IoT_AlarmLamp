@@ -229,6 +229,8 @@ void app_main(void){
     //Configure ADC
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
     
+    ESP_LOGI(SPP_TAG, )
+
     //Current and previous potentiometer reading
     int pots[NUM_READINGS]; uint poti = 0;
     int avg_pot = 0; int prev_avg = 0;
