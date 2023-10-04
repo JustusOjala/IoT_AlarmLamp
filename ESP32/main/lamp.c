@@ -228,8 +228,6 @@ void app_main(void){
 
     //Configure ADC
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
-    
-    ESP_LOGI(SPP_TAG, )
 
     //Current and previous potentiometer reading
     int pots[NUM_READINGS]; uint poti = 0;
@@ -276,7 +274,7 @@ void app_main(void){
         //control if altered sufficiently
         int pot = adc1_get_raw(ADC1_CHANNEL_4);
         avg_pot += pot * 0.001 - pots[poti] * 0.001;
-        pots[poti] = 1;
+        pots[poti] = pot;
         poti = (poti + 1) % NUM_READINGS;
         if(abs(avg_pot - prev_avg) > 100){
             prev_avg = avg_pot;

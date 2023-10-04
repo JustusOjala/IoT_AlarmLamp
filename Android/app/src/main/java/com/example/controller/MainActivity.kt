@@ -8,6 +8,8 @@ import android.content.pm.PackageManager.PERMISSION_GRANTED
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.Button
+import android.widget.SeekBar
+import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
 import java.io.OutputStream
 import java.util.UUID
@@ -16,13 +18,29 @@ class MainActivity : AppCompatActivity() {
     private var lamps: List<BluetoothDevice>? = emptyList()
     private var oStream: OutputStream? = null
     private var brightness: Int = 255
+
+    private val seekBarListener: OnSeekBarChangeListener = (object : OnSeekBarChangeListener{
+        override fun onProgressChanged(seek: SeekBar,
+                                       progress: Int, fromUser: Boolean) {
+            setBrightness(progress)
+        }
+
+        override fun onStartTrackingTouch(seek: SeekBar) {
+
+        }
+
+        override fun onStopTrackingTouch(seek: SeekBar) {
+            turnOn()
+        }
+    })
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         findViewById<Button>(R.id.button).setOnClickListener{turnOff()}
         findViewById<Button>(R.id.button2).setOnClickListener{turnOn()}
-        //findViewById<Button>(R.id.seekBar).setOnClickListener{turnOn()}
+        findViewById<SeekBar>(R.id.seekBar).setOnSeekBarChangeListener(seekBarListener)
 
         val blM: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val blA: BluetoothAdapter? = blM.adapter
@@ -50,7 +68,7 @@ class MainActivity : AppCompatActivity() {
     private fun turnOn(){
         val message: ByteArray = ByteArray(2)
         message[0] = 1
-        message[1] = -1
+        message[1] = brightness.toByte()
         oStream?.write(message) ?: return
     }
 
@@ -58,7 +76,7 @@ class MainActivity : AppCompatActivity() {
         oStream?.write(0) ?: return
     }
 
-    private fun setBrightness(){
-        brightness = 255
+    private fun setBrightness(b: Int){
+        brightness = b
     }
 }
