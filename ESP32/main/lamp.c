@@ -230,7 +230,7 @@ void app_main(void){
     adc1_config_channel_atten(ADC1_CHANNEL_4, 3); //Potentiometer on pin 32
 
     //Current and previous potentiometer reading
-    int pots[NUM_READINGS]; uint poti = 0;
+    int pots[NUM_READINGS] = {0}; uint poti = 0;
     int avg_pot = 0; int prev_avg = 0;
     
     //Button values
@@ -266,6 +266,7 @@ void app_main(void){
             button_read = 1;
             if(autom == false) on = !on;
             else autom = false;
+            ESP_LOGI(SPP_TAG, "Button toggle");
         }else if(button_read && !bstates){
             button_read = 0;
         }
@@ -273,15 +274,18 @@ void app_main(void){
         //Check the potentiometer value with smoothing, update brightness and override automatic
         //control if altered sufficiently
         int pot = adc1_get_raw(ADC1_CHANNEL_4);
-        avg_pot += pot * 0.001 - pots[poti] * 0.001;
+        avg_pot += pot / NUM_READINGS - pots[poti] / NUM_READINGS;
         pots[poti] = pot;
         poti = (poti + 1) % NUM_READINGS;
+        //ESP_LOGI(SPP_TAG, "Pot %i", pot);
         if(abs(avg_pot - prev_avg) > 100){
             prev_avg = avg_pot;
             brightness = (float) avg_pot / 4095.0f;
             if(brightness < 0.0) brightness = 0.0;
             if(brightness > 1.0) brightness = 1.0;
             autom = false;
+            ESP_LOGI(SPP_TAG, "Pot %i", pot);
+            ESP_LOGI(SPP_TAG, "Manual adjust, average %i, brightness %f", avg_pot, brightness);
         }
 
         if(received){
