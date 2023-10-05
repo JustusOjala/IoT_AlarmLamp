@@ -1,23 +1,107 @@
 package com.example.controller
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
+import android.app.AlarmManager
+import android.app.AlarmManager.RTC_WAKEUP
+import android.app.Dialog
+import android.app.PendingIntent
+import android.app.TimePickerDialog
 import android.bluetooth.*
+import android.content.BroadcastReceiver
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager.PERMISSION_GRANTED
-import android.view.View
-import android.view.View.OnClickListener
+import android.icu.util.Calendar
+import android.os.Bundle
+import android.text.format.DateFormat
+import android.text.format.DateFormat.is24HourFormat
 import android.widget.Button
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
+import android.widget.TimePicker
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
 import java.io.OutputStream
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
+class StartTimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        // Use the current time as the default values for the picker.
+        val c = Calendar.getInstance()
+        val hour = c.get(Calendar.HOUR_OF_DAY)
+        val minute = c.get(Calendar.MINUTE)
+
+        // Create a new instance of TimePickerDialog and return it.
+        return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(activity))
+    }
+
+    override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
+        val c = Calendar.getInstance()
+        val cHour = c.get(Calendar.HOUR_OF_DAY)
+        val cMinute = c.get(Calendar.MINUTE)
+
+        if(hourOfDay*60 + minute > cHour*60 + cMinute){
+            start = c.timeInMillis - c.get(Calendar.MILLISECONDS_IN_DAY) + hourOfDay*3600000 + minute*60000
+        }else{
+            start = c.timeInMillis - c.get(Calendar.MILLISECONDS_IN_DAY) + (24+hourOfDay)*3600000 + minute*60000
+        }
+    }
+}
+
+class EndTimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListener {
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        // Use the current time as the default values for the picker.
+        val c = Calendar.getInstance()
+        val hour = c.get(Calendar.HOUR_OF_DAY)
+        val minute = c.get(Calendar.MINUTE)
+
+        // Create a new instance of TimePickerDialog and return it.
+        return TimePickerDialog(activity, this, hour, minute, DateFormat.is24HourFormat(activity))
+    }
+
+    override fun onTimeSet(view: TimePicker, hourOfDay: Int, minute: Int) {
+        val c = Calendar.getInstance()
+        val cHour = c.get(Calendar.HOUR_OF_DAY)
+        val cMinute = c.get(Calendar.MINUTE)
+
+        if(hourOfDay*60 + minute > cHour*60 + cMinute){
+            end = c.timeInMillis - c.get(Calendar.MILLISECONDS_IN_DAY) + hourOfDay*3600000 + minute*60000
+        }else{
+            end = c.timeInMillis - c.get(Calendar.MILLISECONDS_IN_DAY) + (24+hourOfDay)*3600000 + minute*60000
+        }
+    }
+}
+
+var start: Long = 0
+var end: Long = 0
 
 class MainActivity : AppCompatActivity() {
+
+
     private var lamps: List<BluetoothDevice>? = emptyList()
     private var oStream: OutputStream? = null
+
     private var brightness: Int = 255
+
+    private var alarmDesc: String = "No alarm set"
+
+    private var startTime: Long = 0 //Brightening start time in millisecond Unix time
+    private var endTime: Long = 0
+    private var startBrightness: Int = 0
+    private var endBrightness: Int = 0
+
+    private var alarmManager: AlarmManager? = null
+    private var alarmIntent: Intent? = null
+
+    private inner class AlarmReceiver : BroadcastReceiver(){
+        override fun onReceive(context: Context, intent: Intent) {
+            this@MainActivity.turnAuto()
+        }
+    }
 
     private val seekBarListener: OnSeekBarChangeListener = (object : OnSeekBarChangeListener{
         override fun onProgressChanged(seek: SeekBar,
@@ -40,7 +124,21 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.button).setOnClickListener{turnOff()}
         findViewById<Button>(R.id.button2).setOnClickListener{turnOn()}
+        findViewById<Button>(R.id.setButton).setOnClickListener{setSlope()}
+
+        findViewById<Button>(R.id.startTime).setOnClickListener {
+            StartTimePickerFragment().show(supportFragmentManager, "timePicker")
+        }
+        findViewById<Button>(R.id.endTime).setOnClickListener {
+            EndTimePickerFragment().show(supportFragmentManager, "timePicker")
+        }
+
+        findViewById<TextView>(R.id.description).text = alarmDesc
+
         findViewById<SeekBar>(R.id.seekBar).setOnSeekBarChangeListener(seekBarListener)
+
+        alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        alarmIntent = Intent(this, AlarmReceiver::class.java)
 
         val blM: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val blA: BluetoothAdapter? = blM.adapter
@@ -76,7 +174,42 @@ class MainActivity : AppCompatActivity() {
         oStream?.write(0) ?: return
     }
 
+    public fun turnAuto(){
+        if(startTime > endTime) return
+
+        val message: ByteArray = ByteArray(2)
+        message[0] = 2
+
+        //First control point; start at T+0 min
+        message[1] = startBrightness.toByte()
+        message[2] = 0
+
+        //Second control point
+        message[3] = endBrightness.toByte()
+        message[4] = ((endTime - startTime)/60000).toByte()
+
+        oStream?.write(message) ?: return
+    }
+
     private fun setBrightness(b: Int){
         brightness = b
+    }
+
+    private fun setSlope(){
+        startTime = start
+        endTime = end
+
+        startBrightness = findViewById<TextView>(R.id.startBright).text.toString().toInt()
+        endBrightness = findViewById<TextView>(R.id.endBright).text.toString().toInt()
+        findViewById<TextView>(R.id.description).text = alarmDesc
+        if(startTime > endTime) return
+
+        val startDate = Date(startTime)
+        val endDate = Date(endTime)
+
+        alarmDesc = "Alarm set from $startBrightness at $startDate to $endBrightness at $endDate"
+        findViewById<TextView>(R.id.description).text = alarmDesc
+
+        alarmManager?.setExact(RTC_WAKEUP, startTime, PendingIntent.getBroadcast(this, 0, alarmIntent!!, PendingIntent.FLAG_IMMUTABLE))
     }
 }
