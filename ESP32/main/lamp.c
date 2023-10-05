@@ -303,10 +303,11 @@ void app_main(void){
                     ESP_LOGI(SPP_TAG, "Turning on; brightness %f", brightness);
                     break;
                 case 2: //Set to brighten automatically (linear)
+                    tStart = esp_timer_get_time() / 1000000.0f;
                     bezier = 0;
                     on = 1;
                     autom = 1;
-                    pt = 0;
+                    pt = b0 = k = t0 = t1 = 0;
                     points = (received - 1) / 2;
                     ESP_LOGI(SPP_TAG, "Setting up linear interpolation with %i points", (int) points);
                     if(control_points) free(control_points);
@@ -354,12 +355,12 @@ void app_main(void){
                 //Only linear interpolation for now
             }else{
                 if(t >= t1){
-                    pt++;
                     if(pt < points){
-                        t0 = t1;
+                        t0 = 60*control_points[pt].time;
                         t1 = 60*control_points[pt + 1].time;
                         b0 = control_points[pt].brightness;
                         if(t1 > t0){
+
                             k = (control_points[pt + 1].brightness - b0)/(t1 - t0);
                         }else if(t1 == t0){
                             brightness = control_points[pt + 1].brightness;
@@ -373,8 +374,10 @@ void app_main(void){
                         control_points = NULL;
                         autom = false;
                     }
+                    pt++;
                 }else brightness = b0 + (t - t0)*k;
             }
+            //ESP_LOGI(SPP_TAG, "Automatic adjust, brightness %f", brightness);
         }
 
         //Set the PWM value based on the brightness and whether the lamp is on
