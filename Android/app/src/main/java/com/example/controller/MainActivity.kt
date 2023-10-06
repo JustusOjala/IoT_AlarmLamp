@@ -48,6 +48,8 @@ class StartTimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetList
         }else{
             start = c.timeInMillis - c.get(Calendar.MILLISECONDS_IN_DAY) + (24+hourOfDay)*3600000 + minute*60000
         }
+
+        ma?.findViewById<Button>(R.id.startTime)?.text = "$hourOfDay:$minute"
     }
 }
 
@@ -73,11 +75,20 @@ class EndTimePickerFragment : DialogFragment(), TimePickerDialog.OnTimeSetListen
         }else{
             end = c.timeInMillis - c.get(Calendar.MILLISECONDS_IN_DAY) + (24+hourOfDay)*3600000 + minute*60000
         }
+
+        ma?.findViewById<Button>(R.id.endTime)?.text = "$hourOfDay:$minute"
+    }
+}
+
+class AlarmReceiver : BroadcastReceiver(){
+    override fun onReceive(context: Context, intent: Intent) {
+        ma?.turnAuto()
     }
 }
 
 var start: Long = 0
 var end: Long = 0
+var ma: MainActivity? = null
 
 class MainActivity : AppCompatActivity() {
 
@@ -95,13 +106,6 @@ class MainActivity : AppCompatActivity() {
     private var endBrightness: Int = 0
 
     private var alarmManager: AlarmManager? = null
-    private var alarmIntent: Intent? = null
-
-    private inner class AlarmReceiver : BroadcastReceiver(){
-        override fun onReceive(context: Context, intent: Intent) {
-            this@MainActivity.turnAuto()
-        }
-    }
 
     private val seekBarListener: OnSeekBarChangeListener = (object : OnSeekBarChangeListener{
         override fun onProgressChanged(seek: SeekBar,
@@ -120,6 +124,8 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        ma = this
+
         setContentView(R.layout.activity_main)
 
         findViewById<Button>(R.id.button).setOnClickListener{turnOff()}
@@ -132,13 +138,14 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.endTime).setOnClickListener {
             EndTimePickerFragment().show(supportFragmentManager, "timePicker")
         }
+        findViewById<Button>(R.id.startTime).text = "?:??"
+        findViewById<Button>(R.id.endTime).text = "?:??"
 
         findViewById<TextView>(R.id.description).text = alarmDesc
 
         findViewById<SeekBar>(R.id.seekBar).setOnSeekBarChangeListener(seekBarListener)
 
         alarmManager = getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        alarmIntent = Intent(this, AlarmReceiver::class.java)
 
         val blM: BluetoothManager = getSystemService(BluetoothManager::class.java)
         val blA: BluetoothAdapter? = blM.adapter
@@ -177,7 +184,7 @@ class MainActivity : AppCompatActivity() {
     public fun turnAuto(){
         if(startTime > endTime) return
 
-        val message: ByteArray = ByteArray(2)
+        val message: ByteArray = ByteArray(5)
         message[0] = 2
 
         //First control point; start at T+0 min
@@ -210,6 +217,8 @@ class MainActivity : AppCompatActivity() {
         alarmDesc = "Alarm set from $startBrightness at $startDate to $endBrightness at $endDate"
         findViewById<TextView>(R.id.description).text = alarmDesc
 
-        alarmManager?.setExact(RTC_WAKEUP, startTime, PendingIntent.getBroadcast(this, 0, alarmIntent!!, PendingIntent.FLAG_IMMUTABLE))
+        val alarmIntent: Intent = Intent(this, AlarmReceiver::class.java)
+        val pi = PendingIntent.getBroadcast(this, 0, alarmIntent, PendingIntent.FLAG_IMMUTABLE)
+        alarmManager?.setExact(RTC_WAKEUP, startTime, pi)
     }
 }
