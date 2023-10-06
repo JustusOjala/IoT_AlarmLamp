@@ -317,7 +317,7 @@ void app_main(void){
                         break;
                     }
                     for(uint i = 0; i < points; i++){
-                        cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};;
+                        cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};
                         control_points[i] = point;
                         ESP_LOGI(SPP_TAG, "Point %i: brightness %f, time %i", i, point.brightness, point.time);
                     }
@@ -336,7 +336,7 @@ void app_main(void){
                         break;
                     }
                     for(uint i = 0; i < points; i++){
-                        cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};;
+                        cpoint point = {(float) rdata[i*2 + 1] / 255.0, rdata[i*2 + 2]};
                         control_points[i] = point;
                         ESP_LOGI(SPP_TAG, "Point %i: brightness %f, time %i", i, point.brightness, point.time);
                     }
